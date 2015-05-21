@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,21 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(final Context context, Intent intent) {
             String message = intent.getStringExtra("message");
             String number = intent.getStringExtra("number");
-            Toast.makeText(MainActivity.this, number + ": " + message, Toast.LENGTH_SHORT).show();
+
+//            Toast.makeText(MainActivity.this, number + ": " + message, Toast.LENGTH_SHORT).show();
+
+            try {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(number, null, message, null, null);
+                Toast.makeText(getApplicationContext(), "SMS Sent!",
+                        Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(),
+                        "SMS failed, please try again later!",
+                        Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
         }
     };
 
